@@ -840,7 +840,6 @@
         // ============================================
 
         const SUMBER_DATA = {
-            // Sumber dari BKN (Badan Kepegawaian Negara)
             bkn: {
                 nama: "Badan Kepegawaian Negara",
                 tahun: "2024",
@@ -849,11 +848,9 @@
                     "Format Standar SKP",
                     "Template RHK Resmi",
                     "Pedoman Penilaian Kinerja"
-                ],
-                kontak: "https://www.bkn.go.id"
+                ]
             },
             
-            // Sumber dari Kemendikbud
             kemendikbud: {
                 nama: "Kementerian Pendidikan, Kebudayaan, Riset, dan Teknologi",
                 tahun: "2024",
@@ -862,11 +859,9 @@
                     "Indikator Kinerja Guru",
                     "Kurikulum Merdeka",
                     "Panduan Penilaian Hasil Belajar"
-                ],
-                kontak: "https://www.kemdikbud.go.id"
+                ]
             },
             
-            // Sumber dari Permenpan RB
             permenpan: {
                 nama: "Peraturan Menteri PANRB No. 16 Tahun 2009",
                 tahun: "2009",
@@ -881,7 +876,6 @@
 
         // Database Template RHK berdasarkan sumber resmi
         const TEMPLATE_RHK = {
-            // Template untuk Guru (berdasarkan sumber Kemendikbud)
             guru: {
                 sumber: ["kemendikbud", "bkn"],
                 template_utama: [
@@ -942,7 +936,6 @@
                 }
             },
             
-            // Template untuk Kepala Sekolah
             kepala_sekolah: {
                 sumber: ["bkn", "kemendikbud"],
                 template_utama: [
@@ -1020,7 +1013,7 @@
         };
 
         // ============================================
-        // FUNGSI NAVIGASI
+        // FUNGSI NAVIGASI - PERBAIKAN
         // ============================================
 
         function nextToSumberData() {
@@ -1048,9 +1041,11 @@
             updateStepIndicator(2);
             updateUserProfileDisplay();
             
-            // Navigasi
+            // Navigasi - PERBAIKAN DISINI
             pages.identitas.classList.add('hidden');
             pages.sumber.classList.remove('hidden');
+            
+            console.log('Navigasi ke Sumber Data berhasil');
         }
 
         function backToIdentitas() {
@@ -1382,50 +1377,6 @@
             }
         }
 
-        function addCustomRHK() {
-            const judul = prompt('Masukkan judul RHK custom:');
-            if (!judul || judul.trim() === '') return;
-            
-            const newIndex = appState.generatedRHK.filter(r => r.id.startsWith('custom')).length + 1;
-            const newId = `custom-${newIndex}-${appState.generationId}`;
-            
-            // Pilih sumber data acak
-            const sumberIndex = Math.floor(Math.random() * 2);
-            const sumber = sumberIndex === 0 ? SUMBER_DATA.bkn.nama : SUMBER_DATA.kemendikbud.nama;
-            
-            const newRHK = {
-                id: newId,
-                judul: judul.trim(),
-                kategori: 'Custom',
-                sumber: `Ditambahkan manual berdasarkan kebutuhan spesifik`,
-                aspek: {
-                    kuantitas: 'Jumlah kegiatan/dokumen terkait',
-                    target_kuantitas: 'Disesuaikan dengan kebutuhan',
-                    kualitas: 'Tingkat kesesuaian dengan rencana',
-                    target_kualitas: 'Optimal',
-                    waktu: 'Waktu penyelesaian',
-                    target_waktu: 'Sesuai jadwal'
-                }
-            };
-            
-            appState.generatedRHK.push(newRHK);
-            
-            const outputContainer = document.getElementById('rhk-output-container');
-            const newHTML = createRHKHTML(newRHK, 'C' + newIndex);
-            
-            // Tambahkan sebelum tombol aksi jika ada
-            const actionButtons = outputContainer.querySelector('.action-buttons');
-            if (actionButtons) {
-                const tempDiv = document.createElement('div');
-                tempDiv.innerHTML = newHTML;
-                outputContainer.insertBefore(tempDiv.firstChild, actionButtons);
-            } else {
-                outputContainer.innerHTML += newHTML;
-            }
-            
-            showNotification('success', 'RHK custom berhasil ditambahkan');
-        }
-
         // ============================================
         // FUNGSI SIMPAN DAN EXPORT
         // ============================================
@@ -1666,6 +1617,11 @@
             if (history.length > 0) {
                 console.log('History generate tersimpan:', history.length, 'entries');
             }
+            
+            // Debug: cek apakah fungsi terdaftar
+            console.log('Fungsi nextToSumberData:', typeof nextToSumberData);
+            console.log('Fungsi nextToRHKInput:', typeof nextToRHKInput);
+            console.log('Fungsi generateUniqueRHK:', typeof generateUniqueRHK);
         };
     </script>
 </body>
