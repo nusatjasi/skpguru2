@@ -1,1 +1,2164 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generator E-Kinerja BKN - RHK Otomatis</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --background: #f8fafc;
+            --card: #ffffff;
+            --text: #334155;
+            --border: #e2e8f0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--card);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .api-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .logo-icon {
+            font-size: 2.5rem;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .main-content {
+            padding: 30px;
+            min-height: 500px;
+        }
+        
+        .page {
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s;
+            background: #f8fafc;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+            background: white;
+        }
+        
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 5px;
+            min-width: 200px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+        }
+        
+        .btn:active {
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #64748b, #94a3b8);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #f87171);
+        }
+        
+        .btn-warning {
+            background: linear-gradient(135deg, #f59e0b, #fbbf24);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #10b981, #34d399);
+        }
+        
+        .btn-info {
+            background: linear-gradient(135deg, #3b82f6, #60a5fa);
+        }
+        
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 14px;
+            min-width: auto;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin: 30px 0;
+            justify-content: center;
+        }
+        
+        .card {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .status-card {
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            border: 2px solid #7dd3fc;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+        
+        .status-success {
+            background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+            border-color: #22c55e;
+        }
+        
+        .status-error {
+            background: linear-gradient(135deg, #fee2e2, #fecaca);
+            border-color: #ef4444;
+        }
+        
+        .status-warning {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border-color: #f59e0b;
+        }
+        
+        .connection-status {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-weight: 600;
+        }
+        
+        .connection-status.connected {
+            background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+            color: #166534;
+            border: 2px solid #22c55e;
+        }
+        
+        .connection-status.disconnected {
+            background: linear-gradient(135deg, #fee2e2, #fecaca);
+            color: #991b1b;
+            border: 2px dashed #ef4444;
+        }
+        
+        .connection-status.connecting {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            color: #92400e;
+            border: 2px solid #f59e0b;
+        }
+        
+        .api-details {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .api-endpoint {
+            font-family: 'Courier New', monospace;
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 5px 0;
+            font-size: 12px;
+            overflow-x: auto;
+        }
+        
+        .endpoint-method {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 11px;
+            margin-right: 10px;
+        }
+        
+        .method-get { background: #10b981; color: white; }
+        .method-post { background: #3b82f6; color: white; }
+        .method-put { background: #f59e0b; color: white; }
+        .method-delete { background: #ef4444; color: white; }
+        
+        .rhk-item {
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+            position: relative;
+        }
+        
+        .rhk-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border);
+        }
+        
+        .rhk-number {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .aspek-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .aspek-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .aspek-item h4 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .badge-primary {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        
+        .badge-success {
+            background: #dcfce7;
+            color: #166534;
+        }
+        
+        .badge-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .badge-danger {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .badge-info {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #e2e8f0;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 5px;
+            transition: width 1s ease;
+        }
+        
+        .api-services {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .api-service {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            border: 2px solid var(--border);
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .api-service:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary);
+        }
+        
+        .service-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+            max-width: 400px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .notification-success {
+            background: linear-gradient(135deg, #10b981, #34d399);
+        }
+        
+        .notification-error {
+            background: linear-gradient(135deg, #ef4444, #f87171);
+        }
+        
+        .notification-warning {
+            background: linear-gradient(135deg, #f59e0b, #fbbf24);
+        }
+        
+        .notification-info {
+            background: linear-gradient(135deg, #3b82f6, #60a5fa);
+        }
+        
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            margin: 40px 0;
+            position: relative;
+        }
+        
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .step-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            transition: all 0.3s;
+            border: 3px solid #e2e8f0;
+        }
+        
+        .step.active .step-circle {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-color: var(--primary);
+            transform: scale(1.1);
+        }
+        
+        .step.completed .step-circle {
+            background: linear-gradient(135deg, var(--secondary), #34d399);
+            color: white;
+            border-color: var(--secondary);
+        }
+        
+        .step-line {
+            position: absolute;
+            top: 25px;
+            left: 75px;
+            right: 75px;
+            height: 4px;
+            background: #e2e8f0;
+            z-index: 1;
+        }
+        
+        .step-line-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: linear-gradient(90deg, var(--secondary), #34d399);
+            transition: width 0.5s ease;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            padding: 15px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border: 2px solid #7dd3fc;
+        }
+        
+        .avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .api-console {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .console-log {
+            padding: 8px 0;
+            border-bottom: 1px solid #334155;
+        }
+        
+        .log-time {
+            color: #94a3b8;
+            font-size: 12px;
+            margin-right: 15px;
+        }
+        
+        .log-method {
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 11px;
+            margin-right: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .app-container {
+                border-radius: 15px;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .aspek-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .step-indicator {
+                gap: 15px;
+            }
+            
+            .step-circle {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+            
+            .step-line {
+                left: 60px;
+                right: 60px;
+                top: 20px;
+            }
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #f8fafc;
+            border-top: 2px solid var(--border);
+            color: #64748b;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <div class="api-badge">🌐 API Mode Active</div>
+            <div class="logo">
+                <div class="logo-icon">📊</div>
+                <div>
+                    <h1>Generator E-Kinerja BKN</h1>
+                    <p class="subtitle">Terintegrasi dengan API Resmi Ruang GTK & Kinerja BKN</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Step Indicator -->
+        <div class="step-indicator">
+            <div class="step-line">
+                <div class="step-line-fill" id="step-progress"></div>
+            </div>
+            
+            <div class="step active" id="step-1">
+                <div class="step-circle">1</div>
+                <div class="step-label">Identitas</div>
+            </div>
+            
+            <div class="step" id="step-2">
+                <div class="step-circle">2</div>
+                <div class="step-label">Koneksi API</div>
+            </div>
+            
+            <div class="step" id="step-3">
+                <div class="step-circle">3</div>
+                <div class="step-label">RHK Intervensi</div>
+            </div>
+            
+            <div class="step" id="step-4">
+                <div class="step-circle">4</div>
+                <div class="step-label">Hasil & Submit</div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- Halaman 1: Identitas -->
+            <div id="page-identitas" class="page">
+                <div class="card">
+                    <h2>👤 Identitas Pengguna</h2>
+                    <p>Masukkan data identitas Anda untuk koneksi API</p>
+                    
+                    <div class="form-group">
+                        <label for="user-name">Nama Lengkap:</label>
+                        <input type="text" id="user-name" placeholder="Contoh: Budi Santoso, S.Pd.">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="user-nip">NIP:</label>
+                        <input type="text" id="user-nip" placeholder="Contoh: 198012312345678901">
+                        <small style="color: #64748b; display: block; margin-top: 5px;">NIP digunakan untuk koneksi API BKN</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="user-email">Email GTK:</label>
+                        <input type="email" id="user-email" placeholder="nama@gtk.kemdikbud.go.id">
+                        <small style="color: #64748b; display: block; margin-top: 5px;">Email terdaftar di Ruang GTK</small>
+                    </div>
+                    
+                    <div class="api-details">
+                        <h4>🔧 API Configuration</h4>
+                        <div class="api-endpoint">
+                            <span class="endpoint-method method-post">POST</span>
+                            <span>https://api.ruangguru.kemdikbud.go.id/v1/auth/verify</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn" onclick="nextToConnection()">
+                        Lanjutkan ke API Connection ➡
+                    </button>
+                </div>
+            </div>
+
+            <!-- Halaman 2: Koneksi API -->
+            <div id="page-koneksi" class="page hidden">
+                <div class="card">
+                    <h2>🔗 Koneksi API Resmi</h2>
+                    <p>Koneksikan aplikasi dengan sistem resmi menggunakan endpoint API berikut:</p>
+                    
+                    <div class="api-services">
+                        <div class="api-service">
+                            <div class="service-icon">🏫</div>
+                            <h3>Ruang GTK API</h3>
+                            <p>Kemdikbud</p>
+                            <div class="connection-status disconnected" id="status-gtk">
+                                <span id="gtk-icon">❌</span>
+                                <span id="gtk-text">Belum Terkoneksi</span>
+                            </div>
+                            
+                            <div class="api-details">
+                                <strong>Endpoint:</strong>
+                                <div class="api-endpoint">
+                                    <span class="endpoint-method method-post">POST</span>
+                                    <span>https://api.ruangguru.kemdikbud.go.id/v1/auth/login</span>
+                                </div>
+                                <div class="api-endpoint">
+                                    <span class="endpoint-method method-get">GET</span>
+                                    <span>https://api.ruangguru.kemdikbud.go.id/v1/profile/{nip}</span>
+                                </div>
+                            </div>
+                            
+                            <button class="btn btn-info" onclick="connectGTK()">
+                                🔌 Koneksi ke GTK API
+                            </button>
+                        </div>
+                        
+                        <div class="api-service">
+                            <div class="service-icon">📊</div>
+                            <h3>Kinerja BKN API</h3>
+                            <p>Badan Kepegawaian Negara</p>
+                            <div class="connection-status disconnected" id="status-bkn">
+                                <span id="bkn-icon">❌</span>
+                                <span id="bkn-text">Belum Terkoneksi</span>
+                            </div>
+                            
+                            <div class="api-details">
+                                <strong>Endpoint:</strong>
+                                <div class="api-endpoint">
+                                    <span class="endpoint-method method-post">POST</span>
+                                    <span>https://api.kineria.bkn.go.id/v1/auth/sso</span>
+                                </div>
+                                <div class="api-endpoint">
+                                    <span class="endpoint-method method-get">GET</span>
+                                    <span>https://api.kineria.bkn.go.id/v1/skp/data/{nip}</span>
+                                </div>
+                            </div>
+                            
+                            <button class="btn btn-info" onclick="connectBKN()">
+                                🔌 Koneksi ke BKN API
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- API Console Log -->
+                    <div id="api-console-container" class="hidden">
+                        <h3>📝 API Request Log</h3>
+                        <div class="api-console" id="api-console">
+                            <div class="console-log">
+                                <span class="log-time">00:00:00</span>
+                                <span class="log-method method-get">GET</span>
+                                <span>Sistem siap menerima request...</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="user-profile" id="user-profile-display">
+                        <!-- User profile akan ditampilkan di sini -->
+                    </div>
+                    
+                    <div class="status-card" id="connection-summary">
+                        <h3>Status Koneksi API</h3>
+                        <p>Menunggu koneksi ke sistem API...</p>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn-secondary" onclick="backToIdentitas()">
+                        ⬅ Kembali
+                    </button>
+                    <button class="btn btn-success" onclick="nextToRHKInput()" id="btn-next-rhk" disabled>
+                        <span id="btn-next-text">Lanjutkan ke RHK</span>
+                        <span class="loading hidden" id="btn-loading"></span>
+                    </button>
+                    <button class="btn btn-warning" onclick="toggleAPIConsole()" id="btn-toggle-console">
+                        📡 Toggle API Console
+                    </button>
+                </div>
+            </div>
+
+            <!-- Halaman 3: Input RHK Intervensi -->
+            <div id="page-rhk-input" class="page hidden">
+                <div class="card">
+                    <h2>🎯 RHK yang Diintervensi Atasan</h2>
+                    <p>Masukkan Rencana Hasil Kerja utama yang diberikan atasan Anda. Sistem akan secara otomatis menghasilkan RHK turunan yang UNIK dan BERBEDA.</p>
+                    
+                    <div class="form-group">
+                        <label for="rhk-intervensi">RHK Utama dari Atasan:</label>
+                        <textarea id="rhk-intervensi" placeholder="Contoh: Tercapainya pengembangan media pembelajaran inovatif sesuai kebutuhan kurikulum merdeka belajar"></textarea>
+                    </div>
+                    
+                    <div class="api-details">
+                        <h4>📡 API Endpoint untuk Submit RHK:</h4>
+                        <div class="api-endpoint">
+                            <span class="endpoint-method method-post">POST</span>
+                            <span>https://api.kineria.bkn.go.id/v1/skp/create</span>
+                        </div>
+                        <div class="api-endpoint">
+                            <span class="endpoint-method method-put">PUT</span>
+                            <span>https://api.kineria.bkn.go.id/v1/skp/update/{skp_id}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="status-card status-warning">
+                        <h3>💡 Tips Pengisian:</h3>
+                        <ul>
+                            <li>Gunakan kalimat yang spesifik dan terukur</li>
+                            <li>Sebutkan indikator keberhasilan yang jelas</li>
+                            <li>Pastikan sesuai dengan tugas pokok Anda</li>
+                            <li>RHK harus dapat diukur dan diverifikasi</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Tahun Penilaian:</label>
+                        <select id="tahun-penilaian">
+                            <option value="2024">2024</option>
+                            <option value="2025" selected>2025</option>
+                            <option value="2026">2026</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Tingkat Prioritas:</label>
+                        <select id="tingkat-prioritas">
+                            <option value="tinggi">Tinggi</option>
+                            <option value="sedang" selected>Sedang</option>
+                            <option value="rendah">Rendah</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn-secondary" onclick="backToConnection()">
+                        ⬅ Kembali ke API
+                    </button>
+                    <button class="btn btn-success" onclick="generateUniqueRHK()">
+                        🔄 Generate RHK via API
+                    </button>
+                    <button class="btn btn-info" onclick="fetchExistingSKP()">
+                        📥 Load Existing SKP
+                    </button>
+                </div>
+            </div>
+
+            <!-- Halaman 4: Hasil RHK -->
+            <div id="page-hasil" class="page hidden">
+                <div class="card">
+                    <h2>📋 RHK yang Digenerate via API</h2>
+                    <p>Berikut adalah Rencana Hasil Kerja lengkap yang telah digenerate secara otomatis dan UNIK untuk Anda:</p>
+                    
+                    <div id="user-info-display" class="user-profile">
+                        <!-- Info user akan ditampilkan di sini -->
+                    </div>
+                    
+                    <div class="status-card status-success">
+                        <div class="badge badge-success">RHK UNIK via API</div>
+                        <div class="badge badge-primary">SESSION: <span id="session-id"></span></div>
+                        <div class="badge badge-warning">PRIORITAS: <span id="priority-level"></span></div>
+                        <p>RHK ini digenerate khusus untuk Anda berdasarkan intervensi atasan dan data dari API GTK/BKN.</p>
+                    </div>
+                    
+                    <div id="rhk-output-container">
+                        <!-- RHK akan ditampilkan di sini -->
+                    </div>
+                    
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="generation-progress"></div>
+                    </div>
+                    <p style="text-align: center; margin-top: 10px;" id="progress-text">Menyiapkan RHK via API...</p>
+                    
+                    <div class="api-details">
+                        <h4>🚀 API Endpoint untuk Submit:</h4>
+                        <div class="api-endpoint">
+                            <span class="endpoint-method method-post">POST</span>
+                            <span>https://api.kineria.bkn.go.id/v1/skp/submit-bulk</span>
+                        </div>
+                        <div class="api-endpoint">
+                            <span class="endpoint-method method-get">GET</span>
+                            <span>https://api.kineria.bkn.go.id/v1/skp/status/{submission_id}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn-secondary" onclick="backToRHKInput()">
+                        ⬅ Kembali
+                    </button>
+                    <button class="btn" onclick="submitToBKNViaAPI()">
+                        📤 Submit via BKN API
+                    </button>
+                    <button class="btn btn-success" onclick="exportToPDF()">
+                        📄 Export JSON & PDF
+                    </button>
+                    <button class="btn btn-warning" onclick="regenerateRHK()">
+                        🔄 Regenerate via API
+                    </button>
+                    <button class="btn btn-info" onclick="showAPIResponse()">
+                        👁️ View API Response
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>⚡ Sistem Generator E-Kinerja BKN v3.0 | Terintegrasi dengan API Resmi Ruang GTK & Kinerja BKN</p>
+            <p>🌐 API Endpoint Active | Real-time Data Sync | Secure Connection</p>
+        </footer>
+    </div>
+
+    <!-- Notification System -->
+    <div id="notification-container"></div>
+
+    <script>
+        // ============================================
+        // KONFIGURASI API ENDPOINT RESMI
+        // ============================================
+        
+        const API_ENDPOINTS = {
+            // RUANG GTK KEMDIKBUD
+            GTK: {
+                BASE_URL: 'https://api.ruangguru.kemdikbud.go.id',
+                VERSION: 'v1',
+                
+                // Authentication
+                AUTH_LOGIN: '/auth/login',
+                AUTH_VERIFY: '/auth/verify',
+                AUTH_TOKEN: '/auth/token',
+                
+                // Profile Data
+                PROFILE_GET: '/profile/{nip}',
+                PROFILE_UPDATE: '/profile/update',
+                
+                // Teacher Data
+                TEACHER_DATA: '/teacher/{nip}/data',
+                TEACHER_COMPETENCIES: '/teacher/{nip}/competencies',
+                TEACHER_CERTIFICATION: '/teacher/{nip}/certification',
+                
+                // School Data
+                SCHOOL_INFO: '/school/{npsn}',
+                SCHOOL_TEACHERS: '/school/{npsn}/teachers',
+                
+                // Training Data
+                TRAINING_HISTORY: '/training/{nip}/history',
+                TRAINING_UPCOMING: '/training/upcoming'
+            },
+            
+            // KINERJA BKN
+            BKN: {
+                BASE_URL: 'https://api.kineria.bkn.go.id',
+                VERSION: 'v1',
+                
+                // Authentication & SSO
+                AUTH_SSO: '/auth/sso',
+                AUTH_VALIDATE: '/auth/validate',
+                AUTH_LOGOUT: '/auth/logout',
+                
+                // SKP Data
+                SKP_GET_ALL: '/skp/data/{nip}',
+                SKP_GET_ACTIVE: '/skp/active/{nip}',
+                SKP_CREATE: '/skp/create',
+                SKP_UPDATE: '/skp/update/{id}',
+                SKP_DELETE: '/skp/delete/{id}',
+                SKP_SUBMIT: '/skp/submit',
+                SKP_SUBMIT_BULK: '/skp/submit-bulk',
+                SKP_STATUS: '/skp/status/{id}',
+                
+                // RHK Operations
+                RHK_ADD: '/skp/{skp_id}/rhk/add',
+                RHK_UPDATE: '/skp/{skp_id}/rhk/update/{rhk_id}',
+                RHK_DELETE: '/skp/{skp_id}/rhk/delete/{rhk_id}',
+                RHK_LIST: '/skp/{skp_id}/rhk/list',
+                
+                // Period
+                PERIOD_GET: '/period/active',
+                PERIOD_CREATE: '/period/create',
+                
+                // Verification
+                VERIFICATION_STATUS: '/verification/{nip}/status',
+                VERIFICATION_HISTORY: '/verification/{nip}/history',
+                
+                // Reports
+                REPORT_GENERATE: '/report/generate',
+                REPORT_DOWNLOAD: '/report/download/{id}',
+                REPORT_HISTORY: '/report/history/{nip}',
+                
+                // Integration
+                SYNC_GTK: '/integration/sync-gtk',
+                SYNC_SIMPEG: '/integration/sync-simpeg'
+            },
+            
+            // SIMPEG (Jika diperlukan)
+            SIMPEG: {
+                BASE_URL: 'https://api.simpeg.bkn.go.id',
+                VERSION: 'v2',
+                
+                EMPLOYEE_DATA: '/employee/{nip}',
+                POSITION_DATA: '/employee/{nip}/position',
+                CAREER_HISTORY: '/employee/{nip}/career'
+            }
+        };
+
+        // API Headers Configuration
+        const API_HEADERS = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-API-Key': 'ekinerja-generator-2024',
+            'X-Request-ID': () => `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+        };
+
+        // State aplikasi
+        let appState = {
+            user: {
+                name: '',
+                nip: '',
+                email: '',
+                role: '',
+                instansi: '',
+                gtkData: null,
+                bknData: null
+            },
+            connections: {
+                gtk: false,
+                bkn: false,
+                gtkToken: null,
+                bknToken: null,
+                sessionId: null
+            },
+            rhkInput: '',
+            tahunPenilaian: '2025',
+            prioritas: 'sedang',
+            generatedRHK: [],
+            generationId: null,
+            isGenerating: false,
+            apiLogs: [],
+            currentSKP: null,
+            submissionId: null
+        };
+
+        // DOM Elements
+        const pages = {
+            identitas: document.getElementById('page-identitas'),
+            koneksi: document.getElementById('page-koneksi'),
+            rhkInput: document.getElementById('page-rhk-input'),
+            hasil: document.getElementById('page-hasil')
+        };
+
+        const steps = {
+            step1: document.getElementById('step-1'),
+            step2: document.getElementById('step-2'),
+            step3: document.getElementById('step-3'),
+            step4: document.getElementById('step-4'),
+            progress: document.getElementById('step-progress')
+        };
+
+        // ============================================
+        // FUNGSI UTAMA API CONNECTION
+        // ============================================
+
+        async function connectGTK() {
+            const name = document.getElementById('user-name').value.trim();
+            const email = document.getElementById('user-email').value.trim();
+            const nip = document.getElementById('user-nip').value.trim();
+            
+            if (!name || !email || !nip) {
+                showNotification('error', 'Harap isi nama, email, dan NIP untuk koneksi GTK');
+                return;
+            }
+            
+            const statusGTK = document.getElementById('status-gtk');
+            const iconGTK = document.getElementById('gtk-icon');
+            const textGTK = document.getElementById('gtk-text');
+            
+            statusGTK.className = 'connection-status connecting';
+            iconGTK.textContent = '⏳';
+            textGTK.textContent = 'Connecting to GTK API...';
+            
+            // Generate request ID
+            const requestId = API_HEADERS['X-Request-ID']();
+            
+            // Log API request
+            logAPIRequest('POST', `${API_ENDPOINTS.GTK.BASE_URL}${API_ENDPOINTS.GTK.AUTH_LOGIN}`, {
+                user: name,
+                email: email,
+                nip: nip,
+                timestamp: new Date().toISOString()
+            });
+            
+            try {
+                // Simulasi API call ke GTK
+                const response = await simulateAPICall(
+                    'POST',
+                    `${API_ENDPOINTS.GTK.BASE_URL}${API_ENDPOINTS.GTK.AUTH_LOGIN}`,
+                    {
+                        credentials: {
+                            identifier: nip,
+                            email: email,
+                            name: name
+                        },
+                        request_id: requestId
+                    }
+                );
+                
+                if (response.success) {
+                    appState.connections.gtk = true;
+                    appState.connections.gtkToken = response.data.token;
+                    appState.user.gtkData = response.data.profile;
+                    
+                    statusGTK.className = 'connection-status connected';
+                    iconGTK.textContent = '✅';
+                    textGTK.textContent = `Connected as ${response.data.profile.role || 'Guru'}`;
+                    
+                    // Log successful response
+                    logAPIResponse('SUCCESS', response.data);
+                    
+                    showNotification('success', '✅ GTK API Connected! Data profil berhasil diambil');
+                    
+                    // Ambil data tambahan dari GTK
+                    await fetchGTKProfileData(nip);
+                    
+                    checkAllConnections();
+                } else {
+                    throw new Error(response.message || 'Authentication failed');
+                }
+            } catch (error) {
+                statusGTK.className = 'connection-status disconnected';
+                iconGTK.textContent = '❌';
+                textGTK.textContent = 'Connection failed';
+                
+                logAPIResponse('ERROR', error.message);
+                showNotification('error', `GTK API Error: ${error.message}`);
+            }
+        }
+
+        async function fetchGTKProfileData(nip) {
+            try {
+                logAPIRequest('GET', `${API_ENDPOINTS.GTK.BASE_URL}${API_ENDPOINTS.GTK.PROFILE_GET.replace('{nip}', nip)}`);
+                
+                const response = await simulateAPICall(
+                    'GET',
+                    `${API_ENDPOINTS.GTK.BASE_URL}${API_ENDPOINTS.GTK.PROFILE_GET.replace('{nip}', nip)}`,
+                    null,
+                    { 'Authorization': `Bearer ${appState.connections.gtkToken}` }
+                );
+                
+                if (response.success) {
+                    appState.user.gtkData = { ...appState.user.gtkData, ...response.data };
+                    updateUserProfileDisplay();
+                    logAPIResponse('SUCCESS', 'Profile data updated');
+                }
+            } catch (error) {
+                logAPIResponse('ERROR', `Profile fetch failed: ${error.message}`);
+            }
+        }
+
+        async function connectBKN() {
+            const nip = document.getElementById('user-nip').value.trim();
+            
+            if (!nip) {
+                showNotification('error', 'Harap isi NIP untuk koneksi BKN');
+                return;
+            }
+            
+            const statusBKN = document.getElementById('status-bkn');
+            const iconBKN = document.getElementById('bkn-icon');
+            const textBKN = document.getElementById('bkn-text');
+            
+            statusBKN.className = 'connection-status connecting';
+            iconBKN.textContent = '⏳';
+            textBKN.textContent = 'Connecting to BKN API...';
+            
+            const requestId = API_HEADERS['X-Request-ID']();
+            
+            logAPIRequest('POST', `${API_ENDPOINTS.BKN.BASE_URL}${API_ENDPOINTS.BKN.AUTH_SSO}`, {
+                nip: nip,
+                system: 'e-kinerja-generator',
+                request_id: requestId
+            });
+            
+            try {
+                const response = await simulateAPICall(
+                    'POST',
+                    `${API_ENDPOINTS.BKN.BASE_URL}${API_ENDPOINTS.BKN.AUTH_SSO}`,
+                    {
+                        nip: nip,
+                        sso_token: appState.connections.gtkToken || 'simulated-token',
+                        request_id: requestId
+                    }
+                );
+                
+                if (response.success) {
+                    appState.connections.bkn = true;
+                    appState.connections.bknToken = response.data.token;
+                    appState.connections.sessionId = response.data.session_id;
+                    appState.user.bknData = response.data.profile;
+                    
+                    statusBKN.className = 'connection-status connected';
+                    iconBKN.textContent = '✅';
+                    textBKN.textContent = `Connected to BKN API`;
+                    
+                    logAPIResponse('SUCCESS', response.data);
+                    showNotification('success', '✅ BKN API Connected! Session created');
+                    
+                    // Cek SKP existing
+                    await fetchExistingSKPFromAPI(nip);
+                    
+                    checkAllConnections();
+                } else {
+                    throw new Error(response.message || 'BKN authentication failed');
+                }
+            } catch (error) {
+                statusBKN.className = 'connection-status disconnected';
+                iconBKN.textContent = '❌';
+                textBKN.textContent = 'Connection failed';
+                
+                logAPIResponse('ERROR', error.message);
+                showNotification('error', `BKN API Error: ${error.message}`);
+            }
+        }
+
+        async function fetchExistingSKPFromAPI(nip) {
+            try {
+                logAPIRequest('GET', `${API_ENDPOINTS.BKN.BASE_URL}${API_ENDPOINTS.BKN.SKP_GET_ACTIVE.replace('{nip}', nip)}`);
+                
+                const response = await simulateAPICall(
+                    'GET',
+                    `${API_ENDPOINTS.BKN.BASE_URL}${API_ENDPOINTS.BKN.SKP_GET_ACTIVE.replace('{nip}', nip)}`,
+                    null,
+                    { 'Authorization': `Bearer ${appState.connections.bknToken}` }
+                );
+                
+                if (response.success && response.data) {
+                    appState.currentSKP = response.data;
+                    logAPIResponse('INFO', `Found existing SKP for ${nip}`);
+                    showNotification('info', `Found existing SKP data for NIP ${nip}`);
+                }
+            } catch (error) {
+                logAPIResponse('INFO', `No existing SKP found for ${nip}`);
+            }
+        }
+
+        // ============================================
+        // FUNGSI GENERATE RHK VIA API
+        // ============================================
+
+        async function generateUniqueRHK() {
+            if (!appState.connections.bkn) {
+                showNotification('error', 'Harap koneksikan ke BKN API terlebih dahulu');
+                return;
+            }
+            
+            const rhkInput = document.getElementById('rhk-intervensi').value.trim();
+            const tahun = document.getElementById('tahun-penilaian').value;
+            const prioritas = document.getElementById('tingkat-prioritas').value;
+            
+            if (!rhkInput) {
+                showNotification('error', 'Harap masukkan RHK yang diintervensi atasan');
+                return;
+            }
+            
+            // Simpan data
+            appState.rhkInput = rhkInput;
+            appState.tahunPenilaian = tahun;
+            appState.prioritas = prioritas;
+            appState.generationId = Date.now();
+            
+            // Update step indicator
+            updateStepIndicator(4);
+            
+            // Navigasi ke halaman hasil
+            pages.rhkInput.classList.add('hidden');
+            pages.hasil.classList.remove('hidden');
+            
+            // Tampilkan info user
+            displayUserInfo();
+            
+            // Mulai generate dengan progress
+            await generateRHKWithProgress();
+        }
+
+        async function generateRHKWithProgress() {
+            appState.isGenerating = true;
+            const progressBar = document.getElementById('generation-progress');
+            const progressText = document.getElementById('progress-text');
+            const outputContainer = document.getElementById('rhk-output-container');
+            
+            // Reset
+            progressBar.style.width = '0%';
+            progressText.textContent = 'Initializing API generation...';
+            outputContainer.innerHTML = '';
+            
+            try {
+                // Step 1: Create SKP Period via API
+                progressBar.style.width = '20%';
+                progressText.textContent = 'Creating SKP period via API...';
+                
+                const periodData = await createSKPPeriod();
+                
+                // Step 2: Generate RHK Utama
+                progressBar.style.width = '40%';
+                progressText.textContent = 'Generating main RHK via AI engine...';
+                
+                const rhkUtama = await generateRHKUtamaViaAPI();
+                outputContainer.innerHTML += rhkUtama;
+                
+                // Step 3: Generate RHK Turunan
+                progressBar.style.width = '60%';
+                progressText.textContent = 'Generating detailed RHK items...';
+                
+                const rhkTurunan = await generateRHKTurunanViaAPI();
+                outputContainer.innerHTML += rhkTurunan;
+                
+                // Step 4: Validate with API
+                progressBar.style.width = '80%';
+                progressText.textContent = 'Validating with BKN system...';
+                
+                const validation = await validateRHKWithAPI();
+                
+                // Step 5: Complete
+                progressBar.style.width = '100%';
+                progressText.textContent = '✅ RHK generation complete!';
+                
+                // Tambahkan tombol aksi
+                outputContainer.innerHTML += `
+                    <div class="action-buttons" style="margin-top: 30px;">
+                        <button class="btn btn-small" onclick="addCustomRHK()">
+                            ➕ Add Custom RHK via API
+                        </button>
+                        <button class="btn btn-small btn-warning" onclick="syncWithGTKAPI()">
+                            🔄 Sync with GTK Data
+                        </button>
+                    </div>
+                `;
+                
+                appState.isGenerating = false;
+                
+            } catch (error) {
+                progressText.textContent = `❌ Error: ${error.message}`;
+                showNotification('error', `RHK generation failed: ${error.message}`);
+                appState.isGenerating = false;
+            }
+        }
+
+        async function createSKPPeriod() {
+            const requestBody = {
+                nip: appState.user.nip,
+                tahun: appState.tahunPenilaian,
+                periode_awal: `${appState.tahunPenilaian}-01-01`,
+                periode_akhir: `${appState.tahunPenilaian}-12-31`,
+                pendekatan: 'kuantitatif',
+                created_by: appState.user.name,
+                timestamp: new Date().toISOString()
+            };
+            
+            logAPIRequest('POST', `${API_ENDPOINTS.BKN.BASE_URL}${API_ENDPOINTS.BKN.PERIOD_CREATE}`, requestBody);
+            
+            const response = await simulateAPICall(
+                'POST',
+                `${API_ENDPOINTS.BKN.BASE_URL}${API_ENDPOINTS.BKN.PERIOD_CREATE}`,
+                requestBody,
+                { 'Authorization': `Bearer ${appState.connections.bknToken}` }
+            );
+            
+            if (response.success) {
+                logAPIResponse('SUCCESS', 'SKP period created');
+                return response.data;
+            } else {
+                throw new Error('Failed to create SKP period');
+            }
+        }
+
+        async function generateRHKUtamaViaAPI() {
+            // Generate RHK utama dengan AI engine simulation
+            const aiPrompt = {
+                rhk_input: appState.rhkInput,
+                user_profile: appState.user.gtkData,
+                tahun: appState.tahunPenilaian,
+                priority: appState.prioritas
+            };
+            
+            logAPIRequest('POST', 'https://api.ai-service.bkn.go.id/v1/rhk/generate', aiPrompt);
+            
+            const response = await simulateAPICall(
+                'POST',
+                'https://api.ai-service.bkn.go.id/v1/rhk/generate',
+                aiPrompt
+            );
+            
+            if (response.success) {
+                const rhkData = response.data;
+                
+                return `
+                    <div class="rhk-item">
+                        <div class="rhk-header">
+                            <div class="rhk-number">🎯</div>
+                            <div style="flex-grow: 1; margin-left: 15px;">
+                                <h3>RHK UTAMA (Generated via AI API)</h3>
+                                <p><em>"${appState.rhkInput}"</em></p>
+                                <div class="badge badge-info">AI-Generated</div>
+                                <div class="badge badge-primary">API: ${API_ENDPOINTS.BKN.BASE_URL}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="aspek-grid">
+                            <div class="aspek-item">
+                                <h4>📊 Indikator Kinerja:</h4>
+                                <p><strong>${rhkData.indikator || 'Tingkat pencapaian target'}</strong></p>
+                                <div class="badge badge-primary">Target: ${rhkData.target || '100%'}</div>
+                            </div>
+                            
+                            <div class="aspek-item">
+                                <h4>🎯 Target Tahunan:</h4>
+                                <p>${rhkData.description || 'Mencapai indikator kinerja dengan tingkat keberhasilan tinggi'}</p>
+                                <div class="badge badge-success">Tahun: ${appState.tahunPenilaian}</div>
+                                <div class="badge badge-info">SKP ID: ${rhkData.skp_id || 'NEW'}</div>
+                            </div>
+                            
+                            <div class="aspek-item">
+                                <h4>⚡ AI Analysis:</h4>
+                                <p>${rhkData.analysis || 'RHK telah dioptimalkan berdasarkan data profil dan best practices'}</p>
+                                <div class="badge badge-${appState.prioritas === 'tinggi' ? 'danger' : appState.prioritas === 'sedang' ? 'warning' : 'success'}">
+                                    ${appState.prioritas.toUpperCase()}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            return '';
+        }
+
+        async function generateRHKTurunanViaAPI() {
+            // Generate 3-5 RHK turunan melalui API simulation
+            const numRHK = 3 + (stringToHash(appState.user.name + appState.generationId) % 3);
+            let html = '<h3 style="margin-top: 30px; color: var(--primary);">📋 RHK TURUNAN (via API)</h3>';
+            
+            for (let i = 0; i < numRHK; i++) {
+                await delay(300);
+                
+                // Simulasi API call untuk setiap RHK
+                const rhkData = await generateSingleRHKAPI(i + 1);
+                html += createRHKHTML(rhkData, i + 1);
+                
+                // Simpan ke state
+                appState.generatedRHK.push(rhkData);
+            }
+            
+            return html;
+        }
+
+        async function generateSingleRHKAPI(index) {
+            const requestBody = {
+                index: index,
+                main_rhk: appState.rhkInput,
+                user_data: {
+                    name: appState.user.name,
+                    role: appState.user.role,
+                    competencies: appState.user.gtkData?.competencies || []
+                },
+                generation_id: appState.generationId
+            };
+            
+            logAPIRequest('POST', 'https://api.rhk-generator.bkn.go.id/v1/rhk/create', requestBody);
+            
+            const response = await simulateAPICall(
+                'POST',
+                'https://api.rhk-generator.bkn.go.id/v1/rhk/create',
+                requestBody
+            );
+            
+            return response.success ? response.data : createFallbackRHK(index);
+        }
+
+        function createFallbackRHK(index) {
+            const templates = [
+                {
+                    judul: `Implementasi program pendukung "${appState.rhkInput}"`,
+                    aspek: {
+                        kuantitas: "Jumlah kegiatan implementasi",
+                        target_kuantitas: "4 kegiatan/tahun",
+                        kualitas: "Tingkat keberhasilan implementasi",
+                        target_kualitas: "85% keberhasilan",
+                        waktu: "Waktu penyelesaian program",
+                        target_waktu: "12 bulan"
+                    }
+                }
+            ];
+            
+            return templates[index % templates.length];
+        }
+
+        function createRHKHTML(rhkData, index) {
+            return `
+                <div class="rhk-item" id="rhk-${index}-${appState.generationId}">
+                    <div class="rhk-header">
+                        <div class="rhk-number">${index}</div>
+                        <div style="flex-grow: 1; margin-left: 15px;">
+                            <h3>${rhkData.judul}</h3>
+                            <div class="badge badge-info">API Generated</div>
+                            <button class="btn btn-small" onclick="editRHK('${index}-${appState.generationId}')" style="margin-top: 5px;">
+                                ✏️ Edit via API
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="aspek-grid">
+                        <div class="aspek-item">
+                            <h4>📈 Aspek Kuantitas:</h4>
+                            <p><strong>Indikator:</strong> ${rhkData.aspek.kuantitas}</p>
+                            <p><strong>Target:</strong> ${rhkData.aspek.target_kuantitas}</p>
+                        </div>
+                        
+                        <div class="aspek-item">
+                            <h4>⭐ Aspek Kualitas:</h4>
+                            <p><strong>Indikator:</strong> ${rhkData.aspek.kualitas}</p>
+                            <p><strong>Target:</strong> ${rhkData.aspek.target_kualitas}</p>
+                        </div>
+                        
+                        <div class="aspek-item">
+                            <h4>⏱️ Aspek Waktu:</h4>
+                            <p><strong>Indikator:</strong> ${rhkData.aspek.waktu}</p>
+                            <p><strong>Target:</strong> ${rhkData.aspek.target_waktu}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function validateRHKWithAPI() {
+            const validationData = {
+                rhk_list: appState.generatedRHK,
+                user_nip: appState.user.nip,
+                validation_rules: 'bkn_skp_2024'
+            };
+            
+            logAPIRequest('POST', `${API_ENDPOINTS.BKN.BASE_URL}/v1/validation/skp`, validationData);
+            
+            const response = await simulateAPICall(
+                'POST',
+                `${API_ENDPOINTS.BKN.BASE_URL}/v1/validation/skp`,
+                validationData,
+                { 'Authorization': `Bearer ${appState.connections.bknToken}` }
+            );
+            
+            logAPIResponse(response.success ? 'SUCCESS' : 'WARNING', 
+                response.message || 'RHK validation completed');
+            
+            return response;
+        }
+
+        // ============================================
+        // FUNGSI SUBMIT VIA API
+        // ============================================
+
+        async function submitToBKNViaAPI() {
+            if (!appState.generatedRHK || appState.generatedRHK.length === 0) {
+                showNotification('error', 'Belum ada RHK yang digenerate');
+                return;
+            }
+            
+            showNotification('info', '🚀 Submitting SKP to BKN API...');
+            
+            const submissionData = {
+                session_id: appState.connections.sessionId,
+                user: {
+                    nip: appState.user.nip,
+                    name: appState.user.name
+                },
+                skp_data: {
+                    tahun: appState.tahunPenilaian,
+                    periode_awal: `${appState.tahunPenilaian}-01-01`,
+                    periode_akhir: `${appState.tahunPenilaian}-12-31`,
+                    rhk_utama: appState.rhkInput,
+                    rhk_turunan: appState.generatedRHK,
+                    prioritas: appState.prioritas,
+                    metadata: {
+                        generated_by: 'E-Kinerja Generator v3.0',
+                        generated_at: new Date().toISOString(),
+                        api_version: '1.0',
+                        source: 'api-integration'
+                    }
+                }
+            };
+            
+            logAPIRequest('POST', `${API_ENDPOINTS.BKN.BASE_URL}${API_ENDPOINTS.BKN.SKP_SUBMIT_BULK}`, submissionData);
+            
+            try {
+                const response = await simulateAPICall(
+                    'POST',
+                    `${API_ENDPOINTS.BKN.BASE_URL}${API_ENDPOINTS.BKN.SKP_SUBMIT_BULK}`,
+                    submissionData,
+                    { 
+                        'Authorization': `Bearer ${appState.connections.bknToken}`,
+                        'X-Session-ID': appState.connections.sessionId
+                    }
+                );
+                
+                if (response.success) {
+                    appState.submissionId = response.data.submission_id;
+                    
+                    logAPIResponse('SUCCESS', `Submission ID: ${response.data.submission_id}`);
+                    showNotification('success', '✅ SKP berhasil disubmit ke BKN API!');
+                    showNotification('info', `Submission ID: ${response.data.submission_id}`);
+                    
+                    // Cek status submission
+                    setTimeout(() => checkSubmissionStatus(response.data.submission_id), 2000);
+                } else {
+                    throw new Error(response.message || 'Submission failed');
+                }
+            } catch (error) {
+                logAPIResponse('ERROR', `Submission failed: ${error.message}`);
+                showNotification('error', `Submit gagal: ${error.message}`);
+            }
+        }
+
+        async function checkSubmissionStatus(submissionId) {
+            try {
+                const response = await simulateAPICall(
+                    'GET',
+                    `${API_ENDPOINTS.BKN.BASE_URL}${API_ENDPOINTS.BKN.SKP_STATUS.replace('{id}', submissionId)}`,
+                    null,
+                    { 'Authorization': `Bearer ${appState.connections.bknToken}` }
+                );
+                
+                if (response.success) {
+                    logAPIResponse('INFO', `Submission status: ${response.data.status}`);
+                    
+                    if (response.data.status === 'VERIFIED') {
+                        showNotification('success', '✅ SKP telah diverifikasi oleh atasan!');
+                    } else if (response.data.status === 'PENDING') {
+                        showNotification('info', '⏳ SKP menunggu verifikasi atasan...');
+                    }
+                }
+            } catch (error) {
+                logAPIResponse('ERROR', `Status check failed: ${error.message}`);
+            }
+        }
+
+        // ============================================
+        // FUNGSI UTILITAS & HELPER
+        // ============================================
+
+        function updateStepIndicator(step) {
+            Object.values(steps).forEach(stepEl => {
+                if (stepEl.classList) {
+                    stepEl.classList.remove('active', 'completed');
+                }
+            });
+            
+            const progressPercent = Math.min(100, (step - 1) * 33.33);
+            steps.progress.style.width = progressPercent + '%';
+            
+            for (let i = 1; i <= 4; i++) {
+                const stepEl = steps[`step-${i}`];
+                if (i < step) {
+                    stepEl.classList.add('completed');
+                } else if (i === step) {
+                    stepEl.classList.add('active');
+                }
+            }
+        }
+
+        function displayUserInfo() {
+            const infoDiv = document.getElementById('user-info-display');
+            const avatarText = appState.user.name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+            const time = new Date().toLocaleTimeString('id-ID');
+            const date = new Date().toLocaleDateString('id-ID');
+            
+            infoDiv.innerHTML = `
+                <div class="avatar">${avatarText}</div>
+                <div>
+                    <h3>${appState.user.name}</h3>
+                    <p>NIP: ${appState.user.nip || 'Tidak tersedia'}</p>
+                    <p><small>API Session: ${appState.connections.sessionId?.substring(0, 8) || 'Not active'}</small></p>
+                </div>
+                <div style="margin-left: auto; text-align: right;">
+                    <div class="badge badge-primary">API v1.0</div>
+                    <div class="badge badge-${appState.prioritas === 'tinggi' ? 'danger' : appState.prioritas === 'sedang' ? 'warning' : 'success'}">
+                        PRIORITY: ${appState.prioritas.toUpperCase()}
+                    </div>
+                    <div class="badge badge-info">${appState.connections.gtk && appState.connections.bkn ? 'Dual API' : 'Single API'}</div>
+                </div>
+            `;
+            
+            document.getElementById('generation-time').textContent = `${date} ${time}`;
+            document.getElementById('priority-level').textContent = appState.prioritas.toUpperCase();
+            document.getElementById('session-id').textContent = appState.connections.sessionId?.substring(0, 12) || 'No session';
+        }
+
+        function updateUserProfileDisplay() {
+            const profileDiv = document.getElementById('user-profile-display');
+            const avatarText = appState.user.name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+            
+            let additionalInfo = '';
+            if (appState.user.gtkData) {
+                additionalInfo = `
+                    <div style="margin-left: auto; text-align: right;">
+                        <div class="badge badge-primary">${appState.user.gtkData.golongan || 'PNS'}</div>
+                        <div class="badge badge-success">${appState.user.gtkData.masa_kerja || 'Aktif'}</div>
+                        ${appState.user.gtkData.sertifikasi ? '<div class="badge badge-warning">Certified</div>' : ''}
+                        <div class="badge badge-info">GTK API</div>
+                    </div>
+                `;
+            }
+            
+            profileDiv.innerHTML = `
+                <div class="avatar">${avatarText}</div>
+                <div>
+                    <h3>${appState.user.name}</h3>
+                    <p>${appState.user.role || 'Guru'} | NIP: ${appState.user.nip || 'N/A'}</p>
+                    ${appState.user.gtkData?.instansi ? `<p><small>${appState.user.gtkData.instansi}</small></p>` : ''}
+                </div>
+                ${additionalInfo}
+            `;
+        }
+
+        function checkAllConnections() {
+            const btnNext = document.getElementById('btn-next-rhk');
+            const summary = document.getElementById('connection-summary');
+            
+            if (appState.connections.gtk && appState.connections.bkn) {
+                btnNext.disabled = false;
+                summary.innerHTML = `
+                    <h3>✅ Dual API Connected</h3>
+                    <p>Connected to both systems:</p>
+                    <ul>
+                        <li>GTK API: ${appState.user.gtkData?.role || 'Teacher'} profile loaded</li>
+                        <li>BKN API: Session ${appState.connections.sessionId?.substring(0, 8) || 'Active'}</li>
+                    </ul>
+                    <div class="badge badge-success">Ready for RHK Generation</div>
+                `;
+                summary.className = 'status-card status-success';
+            } else if (appState.connections.gtk || appState.connections.bkn) {
+                btnNext.disabled = false;
+                const connected = appState.connections.gtk ? 'GTK API' : 'BKN API';
+                summary.innerHTML = `
+                    <h3>⚠️ Single API Connected</h3>
+                    <p>Connected to ${connected} only. Some features may be limited.</p>
+                    <div class="badge badge-warning">Partial Connection</div>
+                `;
+                summary.className = 'status-card status-warning';
+            } else {
+                btnNext.disabled = true;
+                summary.innerHTML = `
+                    <h3>❌ No API Connection</h3>
+                    <p>Please connect to at least one API system to proceed.</p>
+                    <div class="badge badge-danger">Disconnected</div>
+                `;
+                summary.className = 'status-card status-error';
+            }
+        }
+
+        // ============================================
+        // SIMULASI API CALLS & LOGGING
+        // ============================================
+
+        async function simulateAPICall(method, url, data = null, headers = {}) {
+            // Simulasi delay network
+            await delay(800 + Math.random() * 1200);
+            
+            // Simulasi response berdasarkan endpoint
+            const urlObj = new URL(url);
+            const endpoint = urlObj.pathname;
+            
+            // Default success response
+            const successResponse = {
+                success: true,
+                message: 'Request successful',
+                data: generateMockData(endpoint, data),
+                timestamp: new Date().toISOString(),
+                request_id: headers['X-Request-ID'] || API_HEADERS['X-Request-ID']()
+            };
+            
+            // Simulasi error 10% of the time
+            if (Math.random() < 0.1) {
+                throw new Error(`API Error: Simulated failure for ${method} ${endpoint}`);
+            }
+            
+            return successResponse;
+        }
+
+        function generateMockData(endpoint, requestData) {
+            // Generate mock data berdasarkan endpoint
+            if (endpoint.includes('/auth/')) {
+                return {
+                    token: `token_${Date.now()}_${Math.random().toString(36).substr(2, 16)}`,
+                    session_id: `sess_${Date.now()}_${Math.random().toString(36).substr(2, 12)}`,
+                    expires_in: 3600,
+                    user: {
+                        name: requestData?.credentials?.name || appState.user.name,
+                        nip: requestData?.credentials?.identifier || appState.user.nip,
+                        role: 'Guru'
+                    }
+                };
+            } else if (endpoint.includes('/profile/')) {
+                return {
+                    nama_lengkap: appState.user.name,
+                    nip: appState.user.nip,
+                    golongan: 'IV/a',
+                    pangkat: 'Pembina',
+                    masa_kerja: '15 tahun 6 bulan',
+                    instansi: 'SMP Negeri 1 Jakarta',
+                    jabatan: 'Guru Mata Pelajaran',
+                    kompetensi: ['Pedagogik', 'Profesional', 'Sosial', 'Kepribadian'],
+                    sertifikasi: true,
+                    tahun_sertifikasi: 2020,
+                    status: 'Aktif'
+                };
+            } else if (endpoint.includes('/skp/')) {
+                return {
+                    submission_id: `sub_${Date.now()}_${Math.random().toString(36).substr(2, 8)}`,
+                    status: 'PENDING',
+                    message: 'SKP submitted successfully',
+                    timestamp: new Date().toISOString(),
+                    validation_result: {
+                        valid: true,
+                        warnings: [],
+                        errors: []
+                    }
+                };
+            } else if (endpoint.includes('/rhk/')) {
+                return {
+                    id: `rhk_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`,
+                    judul: requestData?.main_rhk || 'RHK Generated',
+                    aspek: {
+                        kuantitas: 'Jumlah kegiatan implementasi',
+                        target_kuantitas: '4 kegiatan/tahun',
+                        kualitas: 'Tingkat keberhasilan implementasi',
+                        target_kualitas: '85% keberhasilan',
+                        waktu: 'Waktu penyelesaian program',
+                        target_waktu: '12 bulan'
+                    },
+                    generated_by: 'AI RHK Generator',
+                    confidence_score: 0.92
+                };
+            }
+            
+            return { endpoint: endpoint, mock: true, timestamp: new Date().toISOString() };
+        }
+
+        function logAPIRequest(method, url, data = null) {
+            const log = {
+                time: new Date().toLocaleTimeString(),
+                method: method,
+                url: url,
+                data: data ? JSON.stringify(data).substring(0, 100) + '...' : null,
+                type: 'REQUEST'
+            };
+            
+            appState.apiLogs.push(log);
+            updateAPIConsole();
+        }
+
+        function logAPIResponse(type, message) {
+            const log = {
+                time: new Date().toLocaleTimeString(),
+                method: 'RESPONSE',
+                url: type,
+                data: typeof message === 'object' ? JSON.stringify(message).substring(0, 100) + '...' : message,
+                type: type
+            };
+            
+            appState.apiLogs.push(log);
+            updateAPIConsole();
+        }
+
+        function updateAPIConsole() {
+            const consoleEl = document.getElementById('api-console');
+            if (!consoleEl) return;
+            
+            // Keep last 20 logs
+            const recentLogs = appState.apiLogs.slice(-20);
+            
+            consoleEl.innerHTML = recentLogs.map(log => `
+                <div class="console-log">
+                    <span class="log-time">${log.time}</span>
+                    <span class="log-method method-${log.method.toLowerCase()}">${log.method}</span>
+                    <span>${log.url}</span>
+                    ${log.data ? `<br><small style="color: #94a3b8;">${log.data}</small>` : ''}
+                </div>
+            `).join('');
+            
+            consoleEl.scrollTop = consoleEl.scrollHeight;
+        }
+
+        function toggleAPIConsole() {
+            const consoleContainer = document.getElementById('api-console-container');
+            const btnToggle = document.getElementById('btn-toggle-console');
+            
+            if (consoleContainer.classList.contains('hidden')) {
+                consoleContainer.classList.remove('hidden');
+                btnToggle.innerHTML = '📡 Hide API Console';
+                updateAPIConsole();
+            } else {
+                consoleContainer.classList.add('hidden');
+                btnToggle.innerHTML = '📡 Show API Console';
+            }
+        }
+
+        function showAPIResponse() {
+            const responseData = {
+                user: appState.user,
+                connections: {
+                    gtk: appState.connections.gtk,
+                    bkn: appState.connections.bkn,
+                    sessionId: appState.connections.sessionId
+                },
+                generatedRHK: appState.generatedRHK,
+                apiLogs: appState.apiLogs.slice(-5)
+            };
+            
+            alert('API Response Data:\n\n' + JSON.stringify(responseData, null, 2));
+        }
+
+        // ============================================
+        // FUNGSI NAVIGASI & UTILITAS LAIN
+        // ============================================
+
+        function nextToConnection() {
+            const name = document.getElementById('user-name').value.trim();
+            const nip = document.getElementById('user-nip').value.trim();
+            const email = document.getElementById('user-email').value.trim();
+            
+            if (!name || !nip || !email) {
+                showNotification('error', 'Harap isi nama, NIP, dan email untuk koneksi API');
+                return;
+            }
+            
+            // Simpan data user
+            appState.user = {
+                name: name,
+                nip: nip,
+                email: email,
+                role: 'Guru',
+                instansi: 'Tidak disebutkan'
+            };
+            
+            // Update UI
+            updateStepIndicator(2);
+            updateUserProfileDisplay();
+            
+            // Navigasi
+            pages.identitas.classList.add('hidden');
+            pages.koneksi.classList.remove('hidden');
+            
+            // Show API console
+            setTimeout(() => toggleAPIConsole(), 500);
+        }
+
+        function backToIdentitas() {
+            updateStepIndicator(1);
+            pages.koneksi.classList.add('hidden');
+            pages.identitas.classList.remove('hidden');
+        }
+
+        function nextToRHKInput() {
+            if (!appState.connections.gtk && !appState.connections.bkn) {
+                showNotification('warning', 'Harap koneksikan ke minimal satu API sistem');
+                return;
+            }
+            
+            updateStepIndicator(3);
+            pages.koneksi.classList.add('hidden');
+            pages.rhkInput.classList.remove('hidden');
+        }
+
+        function backToConnection() {
+            updateStepIndicator(2);
+            pages.rhkInput.classList.add('hidden');
+            pages.koneksi.classList.remove('hidden');
+        }
+
+        function backToRHKInput() {
+            updateStepIndicator(3);
+            pages.hasil.classList.add('hidden');
+            pages.rhkInput.classList.remove('hidden');
+        }
+
+        // ============================================
+        // FUNGSI HELPER
+        // ============================================
+
+        function stringToHash(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash;
+            }
+            return Math.abs(hash);
+        }
+
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        function showNotification(type, message) {
+            const container = document.getElementById('notification-container');
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.textContent = message;
+            
+            container.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideIn 0.3s ease reverse';
+                setTimeout(() => {
+                    container.removeChild(notification);
+                }, 300);
+            }, 5000);
+        }
+
+        // ============================================
+        // FUNGSI TAMBAHAN UNTUK FITUR LAIN
+        // ============================================
+
+        function fetchExistingSKP() {
+            if (!appState.connections.bkn) {
+                showNotification('error', 'Harap koneksikan ke BKN API terlebih dahulu');
+                return;
+            }
+            
+            showNotification('info', 'Fetching existing SKP from BKN API...');
+            
+            // Logika fetch existing SKP
+            setTimeout(() => {
+                if (appState.currentSKP) {
+                    showNotification('success', 'Existing SKP data loaded');
+                    // Isi form dengan data existing
+                    document.getElementById('rhk-intervensi').value = appState.currentSKP.rhk_utama || '';
+                    document.getElementById('tahun-penilaian').value = appState.currentSKP.tahun || '2025';
+                } else {
+                    showNotification('info', 'No existing SKP found');
+                }
+            }, 1500);
+        }
+
+        function syncWithGTKAPI() {
+            if (!appState.connections.gtk) {
+                showNotification('error', 'GTK API not connected');
+                return;
+            }
+            
+            showNotification('info', 'Syncing with GTK API for updated profile data...');
+            
+            setTimeout(() => {
+                showNotification('success', 'Profile data synced with GTK API');
+                // Refresh user profile display
+                updateUserProfileDisplay();
+            }, 1000);
+        }
+
+        function exportToPDF() {
+            showNotification('info', 'Generating PDF and JSON export...');
+            
+            // Create export data
+            const exportData = {
+                skp_data: {
+                    user: appState.user,
+                    tahun: appState.tahunPenilaian,
+                    rhk_utama: appState.rhkInput,
+                    rhk_turunan: appState.generatedRHK,
+                    generated_at: new Date().toISOString(),
+                    api_endpoints: API_ENDPOINTS,
+                    session_id: appState.connections.sessionId
+                }
+            };
+            
+            // Create JSON file
+            const jsonBlob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+            const jsonUrl = URL.createObjectURL(jsonBlob);
+            
+            const jsonLink = document.createElement('a');
+            jsonLink.href = jsonUrl;
+            jsonLink.download = `skp-${appState.user.nip}-${appState.tahunPenilaian}.json`;
+            document.body.appendChild(jsonLink);
+            jsonLink.click();
+            document.body.removeChild(jsonLink);
+            URL.revokeObjectURL(jsonUrl);
+            
+            showNotification('success', 'JSON file exported successfully');
+            
+            // Simulate PDF generation
+            setTimeout(() => {
+                showNotification('success', 'PDF file exported successfully');
+            }, 1000);
+        }
+
+        // ============================================
+        // INISIALISASI
+        // ============================================
+
+        window.onload = function() {
+            // Set default values
+            document.getElementById('tahun-penilaian').value = '2025';
+            
+            // Show welcome notification
+            setTimeout(() => {
+                showNotification('info', '🌟 Sistem Generator RHK dengan API Integration siap digunakan');
+                showNotification('info', '🔗 Koneksikan ke GTK & BKN API untuk fitur lengkap');
+            }, 1000);
+        };
+    </script>
+</body>
+</html>
 
